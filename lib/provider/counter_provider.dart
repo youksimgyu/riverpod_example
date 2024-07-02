@@ -5,6 +5,7 @@ class Counter {
 
   void increment() {
     counterValue++;
+    print(counterValue);
   }
 }
 
