@@ -25,26 +25,6 @@ class MainApp extends StatelessWidget {
             );
           },
         ),
-        // body: Center(
-        //   child: Column(
-        //     mainAxisAlignment: MainAxisAlignment.center,
-        //     children: [
-        //       const CounterWidget(),
-        //       const CounterStatefulWidget(),
-        //       Consumer(
-        //         builder: (context, ref, child) {
-        //           final counter = ref.read(counterProvider);
-        //           return ElevatedButton(
-        //             onPressed: () {
-        //               counter.decrement();
-        //             },
-        //             child: const Text('감소'),
-        //           );
-        //         },
-        //       ),
-        //     ],
-        //   ),
-        // ),
         floatingActionButton: Consumer(
           builder: (context, ref, child) {
             return FloatingActionButton(
