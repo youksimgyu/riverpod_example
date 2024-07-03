@@ -5,7 +5,12 @@ class Counter {
 
   void increment() {
     counterValue++;
-    print(counterValue);
+    print('increment: $counterValue');
+  }
+
+  void decrement() {
+    counterValue--;
+    print('decrement: $counterValue');
   }
 }
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_example/provider/counter_consumer_stful_widget.dart';
 import 'package:riverpod_example/provider/counter_consumer_widget.dart';
 import 'package:riverpod_example/provider/counter_provider.dart';
 
@@ -18,8 +19,25 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        body: const Center(
-          child: CounterStatefulWidget(),
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const CounterWidget(),
+              const CounterStatefulWidget(),
+              Consumer(
+                builder: (context, ref, child) {
+                  final counter = ref.read(counterProvider);
+                  return ElevatedButton(
+                    onPressed: () {
+                      counter.decrement();
+                    },
+                    child: const Text('감소'),
+                  );
+                },
+              ),
+            ],
+          ),
         ),
         floatingActionButton: Consumer(
           builder: (context, ref, child) {
