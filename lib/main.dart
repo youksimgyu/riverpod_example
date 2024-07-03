@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:riverpod_example/state_provider/my_state_provider.dart';
+import 'package:riverpod_example/state_notifier_provider/my_state_notifier_provider.dart';
 
 void main() {
   runApp(
@@ -19,7 +19,7 @@ class MainApp extends StatelessWidget {
       home: Scaffold(
         body: Consumer(
           builder: (context, ref, child) {
-            final counter = ref.watch(counterStateProvider);
+            final counter = ref.watch(counterStateNotifierProvider);
             return Center(
               child: Text(counter.toString()),
             );
@@ -29,9 +29,7 @@ class MainApp extends StatelessWidget {
           builder: (context, ref, child) {
             return FloatingActionButton(
               onPressed: () {
-                ref
-                    .read(counterStateProvider.notifier)
-                    .update((state) => state + 1);
+                ref.read(counterStateNotifierProvider.notifier).increment();
               },
               child: const Icon(Icons.add),
             );
