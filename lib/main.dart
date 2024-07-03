@@ -18,7 +18,7 @@ class MainApp extends StatelessWidget {
     return MaterialApp(
       home: Scaffold(
         body: const Center(
-          child: Text('Hello World!'),
+          child: CounterWidget(),
         ),
         floatingActionButton: Consumer(
           builder: (context, ref, child) {
@@ -32,6 +32,19 @@ class MainApp extends StatelessWidget {
           },
         ),
       ),
+    );
+  }
+}
+
+class CounterWidget extends ConsumerWidget {
+  const CounterWidget({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final counter = ref.read(counterProvider);
+    return ElevatedButton(
+      onPressed: () => counter.increment(),
+      child: const Text('증가 시키기'),
     );
   }
 }
