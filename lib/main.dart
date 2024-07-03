@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:riverpod_example/state_notifier_provider/my_state_notifier_provider.dart';
+
+import 'future_provider/simple_future_provider.dart';
 
 void main() {
   runApp(
@@ -15,26 +16,34 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        body: Consumer(
-          builder: (context, ref, child) {
-            final counter = ref.watch(counterStateNotifierProvider);
-            return Center(
-              child: Text(counter.toString()),
-            );
-          },
-        ),
-        floatingActionButton: Consumer(
-          builder: (context, ref, child) {
-            return FloatingActionButton(
-              onPressed: () {
-                ref.read(counterStateNotifierProvider.notifier).increment();
-              },
-              child: const Icon(Icons.add),
-            );
-          },
-        ),
+    return const MaterialApp(
+      home: MyHomePage(),
+    );
+  }
+}
+
+class MyHomePage extends StatelessWidget {
+  const MyHomePage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Scaffold(
+      body: MyFutureProviderWidget(),
+    );
+  }
+}
+
+class MyFutureProviderWidget extends ConsumerWidget {
+  const MyFutureProviderWidget({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final intValue = ref.watch(simpleFutureProvider);
+    return Center(
+      child: intValue.when(
+        data: (data) => Text('Data: $data'),
+        error: (error, stackTrace) => Text('Error: $error'),
+        loading: () => const CircularProgressIndicator.adaptive(),
       ),
     );
   }
