@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:riverpod_example/provider/counter_consumer_stful_widget.dart';
-import 'package:riverpod_example/provider/counter_consumer_widget.dart';
-import 'package:riverpod_example/provider/counter_provider.dart';
+import 'package:riverpod_example/state_provider/my_state_provider.dart';
 
 void main() {
   runApp(
@@ -19,32 +17,41 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const CounterWidget(),
-              const CounterStatefulWidget(),
-              Consumer(
-                builder: (context, ref, child) {
-                  final counter = ref.read(counterProvider);
-                  return ElevatedButton(
-                    onPressed: () {
-                      counter.decrement();
-                    },
-                    child: const Text('감소'),
-                  );
-                },
-              ),
-            ],
-          ),
+        body: Consumer(
+          builder: (context, ref, child) {
+            final counter = ref.watch(counterStateProvider);
+            return Center(
+              child: Text(counter.toString()),
+            );
+          },
         ),
+        // body: Center(
+        //   child: Column(
+        //     mainAxisAlignment: MainAxisAlignment.center,
+        //     children: [
+        //       const CounterWidget(),
+        //       const CounterStatefulWidget(),
+        //       Consumer(
+        //         builder: (context, ref, child) {
+        //           final counter = ref.read(counterProvider);
+        //           return ElevatedButton(
+        //             onPressed: () {
+        //               counter.decrement();
+        //             },
+        //             child: const Text('감소'),
+        //           );
+        //         },
+        //       ),
+        //     ],
+        //   ),
+        // ),
         floatingActionButton: Consumer(
           builder: (context, ref, child) {
-            final counter = ref.read(counterProvider);
             return FloatingActionButton(
               onPressed: () {
-                counter.increment();
+                ref
+                    .read(counterStateProvider.notifier)
+                    .update((state) => state + 1);
               },
               child: const Icon(Icons.add),
             );
