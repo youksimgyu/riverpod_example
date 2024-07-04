@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:riverpod_example/stream_provider/simple_stream_provider.dart';
+
+import 'change_notifier_provider/my_change_notifier_provider.dart';
 
 void main() {
   runApp(
@@ -27,21 +28,24 @@ class MyHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // body: MyStreamProviderWidget(),
       body: Center(
         child: Consumer(
           builder: (context, ref, child) {
-            ref.listen(simpleStreamProvider, (previous, next) {
-              print('previous: $previous, next: $next');
-            });
-            return StreamBuilder(
-              stream: ref.watch(simpleStreamProvider.future).asStream(),
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return Text('Data: ${snapshot.data}');
-                }
-                return const CircularProgressIndicator.adaptive();
-              },
+            final count = ref.watch(counterChangeNotifier).counterValue;
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('counter : $count'),
+                ElevatedButton(
+                  onPressed: () =>
+                      ref.read(counterChangeNotifier.notifier).increment(),
+                  child: const Text('증가'),
+                ),
+                ElevatedButton(
+                  onPressed: () => ref.read(counterChangeNotifier).decrement(),
+                  child: const Text('감소'),
+                ),
+              ],
             );
           },
         ),
