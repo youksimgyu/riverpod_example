@@ -1,7 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:http/http.dart' as http;
 
-import 'change_notifier_provider/my_change_notifier_provider.dart';
+final tmpProvider = StateProvider.family<int, int>((ref, arg) => arg + 0);
+
+final idStateProvider = StateProvider<int>((ref) => 1);
+
+final postFutureProviderFamily = FutureProvider.family(
+  (ref, id) async {
+    final id = ref.watch(idStateProvider);
+    final response = await http
+        .get(Uri.parse('https://jsonplaceholder.typicode.com/posts/$id'));
+    if (response.statusCode == 200) {
+      return response.body;
+    }
+  },
+);
 
 void main() {
   runApp(
@@ -31,24 +45,24 @@ class MyHomePage extends StatelessWidget {
       body: Center(
         child: Consumer(
           builder: (context, ref, child) {
-            final count = ref.watch(counterChangeNotifier).counterValue;
-            return Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text('counter : $count'),
-                ElevatedButton(
-                  onPressed: () =>
-                      ref.read(counterChangeNotifier.notifier).increment(),
-                  child: const Text('증가'),
-                ),
-                ElevatedButton(
-                  onPressed: () => ref.read(counterChangeNotifier).decrement(),
-                  child: const Text('감소'),
-                ),
-              ],
+            final id = ref.watch(idStateProvider);
+            final post = ref.watch(postFutureProviderFamily(id));
+            return post.when(
+              data: (data) => Text(data.toString()),
+              loading: () => const CircularProgressIndicator.adaptive(),
+              error: (error, stackTrace) => Text('Error: $error'),
             );
           },
         ),
+      ),
+      floatingActionButton: Consumer(
+        builder: (context, ref, child) {
+          return FloatingActionButton(
+            onPressed: () =>
+                ref.read(idStateProvider.notifier).update((state) => state + 1),
+            child: const Icon(Icons.add),
+          );
+        },
       ),
     );
   }
