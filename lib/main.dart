@@ -2,20 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 
-final tmpProvider = StateProvider.family<int, int>((ref, arg) => arg + 0);
+const jsonUrl = 'https://jsonplaceholder.typicode.com/posts';
 
-final idStateProvider = StateProvider<int>((ref) => 1);
+final postFutureProvider = FutureProvider.autoDispose<String?>((ref) async {
+  ref.onCancel(() {
+    print('Cancelled');
+  });
 
-final postFutureProviderFamily = FutureProvider.family(
-  (ref, id) async {
-    final id = ref.watch(idStateProvider);
-    final response = await http
-        .get(Uri.parse('https://jsonplaceholder.typicode.com/posts/$id'));
-    if (response.statusCode == 200) {
-      return response.body;
-    }
-  },
-);
+  ref.onDispose(() {
+    print('Disposed');
+  });
+
+  final response = await http.get(Uri.parse("$jsonUrl/1"));
+  if (response.statusCode == 200) {
+    return response.body;
+  }
+  return null;
+});
 
 void main() {
   runApp(
@@ -43,26 +46,42 @@ class MyHomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
+          child: ElevatedButton(
+        onPressed: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => const SecondPage(),
+            ),
+          );
+        },
+        child: const Text('다음 페이지'),
+      )),
+    );
+  }
+}
+
+class SecondPage extends StatefulWidget {
+  const SecondPage({super.key});
+
+  @override
+  State<SecondPage> createState() => _SecondPageState();
+}
+
+class _SecondPageState extends State<SecondPage> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
         child: Consumer(
           builder: (context, ref, child) {
-            final id = ref.watch(idStateProvider);
-            final post = ref.watch(postFutureProviderFamily(id));
+            final post = ref.watch(postFutureProvider);
             return post.when(
               data: (data) => Text(data.toString()),
-              loading: () => const CircularProgressIndicator.adaptive(),
               error: (error, stackTrace) => Text('Error: $error'),
+              loading: () => const CircularProgressIndicator.adaptive(),
             );
           },
         ),
-      ),
-      floatingActionButton: Consumer(
-        builder: (context, ref, child) {
-          return FloatingActionButton(
-            onPressed: () =>
-                ref.read(idStateProvider.notifier).update((state) => state + 1),
-            child: const Icon(Icons.add),
-          );
-        },
       ),
     );
   }
