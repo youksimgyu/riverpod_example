@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import 'future_provider/simple_future_provider.dart';
+import 'package:riverpod_example/stream_provider/simple_stream_provider.dart';
 
 void main() {
   runApp(
@@ -27,23 +26,25 @@ class MyHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: MyFutureProviderWidget(),
-    );
-  }
-}
-
-class MyFutureProviderWidget extends ConsumerWidget {
-  const MyFutureProviderWidget({super.key});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final intValue = ref.watch(simpleFutureProvider);
-    return Center(
-      child: intValue.when(
-        data: (data) => Text('Data: $data'),
-        error: (error, stackTrace) => Text('Error: $error'),
-        loading: () => const CircularProgressIndicator.adaptive(),
+    return Scaffold(
+      // body: MyStreamProviderWidget(),
+      body: Center(
+        child: Consumer(
+          builder: (context, ref, child) {
+            ref.listen(simpleStreamProvider, (previous, next) {
+              print('previous: $previous, next: $next');
+            });
+            return StreamBuilder(
+              stream: ref.watch(simpleStreamProvider.future).asStream(),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return Text('Data: ${snapshot.data}');
+                }
+                return const CircularProgressIndicator.adaptive();
+              },
+            );
+          },
+        ),
       ),
     );
   }
