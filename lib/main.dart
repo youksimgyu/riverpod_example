@@ -18,60 +18,69 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-      home: FirstPage(),
+      home: Home(),
     );
   }
 }
 
-class FirstPage extends StatelessWidget {
-  const FirstPage({super.key});
+class Home extends StatefulWidget {
+  const Home({super.key});
 
+  @override
+  State<Home> createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: ElevatedButton(
-          onPressed: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) {
-                  return Scaffold(
-                    appBar: AppBar(
-                      title: const Text('Second Page'),
-                    ),
-                    body: const SecondPage(),
-                  );
-                },
-              ),
-            );
-          },
-          child: const Text('다음 페이지'),
+        appBar: AppBar(
+          title: const Text('Scope & Lifecycles'),
         ),
-      ),
-    );
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const CounterWidget(),
+              const SizedBox(height: 20),
+              ProviderScope(
+                overrides: [
+                  counterStateProvider,
+                ],
+                child: const CounterWidget(),
+              ),
+              const SizedBox(height: 20),
+              ProviderScope(
+                overrides: [
+                  counterStateProvider.overrideWith((ref) => 10),
+                ],
+                child: const CounterWidget(),
+              ),
+            ],
+          ),
+        ));
   }
 }
 
-class SecondPage extends ConsumerWidget {
-  const SecondPage({super.key});
+class CounterWidget extends ConsumerWidget {
+  const CounterWidget({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final counter = ref.watch(counterStateProvider);
-    return Scaffold(
-      body: Center(
-        child: Text('Counter: $counter'),
-      ),
-      floatingActionButton: Consumer(
-        builder: (context, ref, child) {
-          return FloatingActionButton(
-            onPressed: () {
-              ref.read(counterStateProvider.notifier).state++;
-            },
-            child: const Icon(Icons.add),
-          );
-        },
-      ),
+    final count = ref.watch(counterStateProvider);
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text('Counter: $count'),
+        ElevatedButton(
+          onPressed: () {
+            ref
+                .read(counterStateProvider.notifier)
+                .update((state) => state + 1);
+          },
+          child: const Text('Increment'),
+        ),
+      ],
     );
   }
 }
