@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'notifier_provider/my_notifier_provider.dart';
+
 void main() {
   runApp(const ProviderScope(
     observers: [
@@ -21,19 +23,26 @@ class MainApp extends StatelessWidget {
   }
 }
 
-class Home extends StatefulWidget {
+class Home extends ConsumerWidget {
   const Home({super.key});
 
   @override
-  State<Home> createState() => _HomeState();
-}
-
-class _HomeState extends State<Home> {
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold(
+  Widget build(BuildContext context, WidgetRef ref) {
+    final counter = ref.watch(counterNotifierProvider);
+    return Scaffold(
       body: Center(
-        child: Text('Hello World!'),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text('Counter: $counter'),
+          ],
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          ref.read(counterNotifierProvider.notifier).increment();
+        },
+        child: const Icon(Icons.add),
       ),
     );
   }
