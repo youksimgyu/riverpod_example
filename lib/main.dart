@@ -1,13 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:riverpod_example/async_notifier_provider/my_async_notifier_provider.dart';
+import 'package:riverpod_example/override_with_value/override_counter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-void main() {
-  runApp(const ProviderScope(
-    observers: [
+final sharedPreferencesProvider =
+    Provider<SharedPreferences>((ref) => throw UnimplementedError());
+
+final themeProvider = StateProvider<bool>((ref) {
+  final theme = ref.read(sharedPreferencesProvider).getBool('theme') ?? false;
+  return theme;
+});
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final pref = await SharedPreferences.getInstance();
+  runApp(ProviderScope(
+    observers: const [
       // ProviderLogger(),
     ],
-    child: MainApp(),
+    overrides: [
+      counterOverrideStateProvider.overrideWith((ref) => 1000),
+      sharedPreferencesProvider.overrideWithValue(pref),
+    ],
+    child: const MainApp(),
   ));
 }
 
@@ -27,29 +42,19 @@ class Home extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final counter = ref.watch(asyncCounterNotifierProvider);
+    final counter = ref.watch(counterOverrideStateProvider);
     return Scaffold(
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            counter.when(
-              data: (data) => Text('data: $data'),
-              loading: () => const CircularProgressIndicator(),
-              error: (error, stack) => Text('error: $error'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                ref.invalidate(asyncCounterNotifierProvider);
-              },
-              child: const Text('invalidate'),
-            ),
+            Text('counter: $counter'),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          ref.read(asyncCounterNotifierProvider.notifier).increment();
+          ref.read(counterOverrideStateProvider.notifier).state++;
         },
         child: const Icon(Icons.add),
       ),
