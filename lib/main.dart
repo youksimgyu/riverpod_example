@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import 'notifier_provider/my_notifier_provider.dart';
+import 'package:riverpod_example/async_notifier_provider/my_async_notifier_provider.dart';
 
 void main() {
   runApp(const ProviderScope(
@@ -28,19 +27,23 @@ class Home extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final counter = ref.watch(counterNotifierProvider);
+    final counter = ref.watch(asyncCounterNotifierProvider);
     return Scaffold(
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text('Counter: $counter'),
+            counter.when(
+              data: (data) => Text('Data: $data'),
+              error: (error, stack) => Text('Error: $error'),
+              loading: () => const CircularProgressIndicator.adaptive(),
+            ),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          ref.read(counterNotifierProvider.notifier).increment();
+          // ref.read(asyncCounterNotifierProvider.notifier).increment();
         },
         child: const Icon(Icons.add),
       ),
