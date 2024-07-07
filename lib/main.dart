@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:riverpod_example/async_notifier_provider/my_async_notifier_provider.dart';
+import 'package:riverpod_example/riverpod_gen/future_gen_proivder.dart';
 
 void main() {
   runApp(const ProviderScope(
@@ -27,7 +27,7 @@ class Home extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final counter = ref.watch(asyncCounterNotifierProvider);
+    final counter = ref.watch(newCounterProvider(10, 20));
     return Scaffold(
       body: Center(
         child: Column(
