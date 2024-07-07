@@ -18,4 +18,11 @@ final class AsyncCounterNotifier extends AsyncNotifier<int> {
 
     return users.length;
   }
+
+  void increment() {
+    state = const AsyncValue.loading();
+    var old = state.value ?? 0;
+    old++;
+    state = AsyncValue.data(old);
+  }
 }
