@@ -6,7 +6,7 @@ part of 'my_invalidate_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$numberNotifierHash() => r'75701500729a61c13c9ca278521e5ae853fc8643';
+String _$numberNotifierHash() => r'cb56aa80c66fe4963c6e18adb13c89ab17cb609f';
 
 /// See also [NumberNotifier].
 @ProviderFor(NumberNotifier)

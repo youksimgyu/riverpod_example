@@ -1,29 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:riverpod_example/override_with_value/override_counter.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
 
-final sharedPreferencesProvider =
-    Provider<SharedPreferences>((ref) => throw UnimplementedError());
-
-final themeProvider = StateProvider<bool>((ref) {
-  final theme = ref.read(sharedPreferencesProvider).getBool('theme') ?? false;
-  return theme;
-});
+String jsonUrl = 'https://jsonplaceholder.typicode.com/users';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  final pref = await SharedPreferences.getInstance();
-  runApp(ProviderScope(
-    observers: const [
-      // ProviderLogger(),
-    ],
-    overrides: [
-      counterOverrideStateProvider.overrideWith((ref) => 1000),
-      sharedPreferencesProvider.overrideWithValue(pref),
-    ],
-    child: const MainApp(),
-  ));
+  runApp(
+    const MainApp(),
+  );
 }
 
 class MainApp extends StatelessWidget {
@@ -37,24 +20,21 @@ class MainApp extends StatelessWidget {
   }
 }
 
-class Home extends ConsumerWidget {
+class Home extends StatelessWidget {
   const Home({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final counter = ref.watch(counterOverrideStateProvider);
+  Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text('counter: $counter'),
-          ],
-        ),
+      body: const Center(
+        child: Text('Hello World!'),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          ref.read(counterOverrideStateProvider.notifier).state++;
+        onPressed: () async {
+          final response = await http.get(Uri.parse(jsonUrl));
+          if (response.statusCode == 200) {
+            print(response.body);
+          }
         },
         child: const Icon(Icons.add),
       ),
