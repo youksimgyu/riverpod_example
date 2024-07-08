@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:riverpod_example/model/freezed_user_model.dart';
 
 String jsonUrl = 'https://jsonplaceholder.typicode.com/users';
 
@@ -33,7 +36,12 @@ class Home extends StatelessWidget {
         onPressed: () async {
           final response = await http.get(Uri.parse(jsonUrl));
           if (response.statusCode == 200) {
-            print(response.body);
+            List<dynamic> users = jsonDecode(response.body);
+            for (var element in users) {
+              final jsonData = element as Map<String, dynamic>;
+              final user = FreezedUserModel.fromJson(jsonData);
+              print(user.toString());
+            }
           }
         },
         child: const Icon(Icons.add),
