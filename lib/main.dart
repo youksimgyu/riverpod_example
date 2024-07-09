@@ -1,50 +1,101 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:riverpod_example/model/freezed_user_model.dart';
-
-String jsonUrl = 'https://jsonplaceholder.typicode.com/users';
+import 'package:go_router/go_router.dart';
 
 void main() async {
   runApp(
-    const MainApp(),
+    MainApp(),
   );
 }
 
 class MainApp extends StatelessWidget {
-  const MainApp({super.key});
+  MainApp({super.key});
+
+  final _router = GoRouter(
+    routes: [
+      GoRoute(
+        path: '/',
+        builder: (context, state) => const HomeScreen(),
+        routes: [
+          GoRoute(
+            path: 'user',
+            builder: (context, state) => const UserScreen(),
+          ),
+        ],
+      ),
+      GoRoute(
+        path: '/login',
+        builder: (context, state) => const LoginScreen(),
+      ),
+    ],
+  );
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: Home(),
+    return MaterialApp.router(
+      routerConfig: _router,
     );
   }
 }
 
-class Home extends StatelessWidget {
-  const Home({super.key});
+class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: const Center(
-        child: Text('Hello World!'),
+      appBar: AppBar(
+        title: const Text('Home Screen'),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          final response = await http.get(Uri.parse(jsonUrl));
-          if (response.statusCode == 200) {
-            List<dynamic> users = jsonDecode(response.body);
-            for (var element in users) {
-              final jsonData = element as Map<String, dynamic>;
-              final user = FreezedUserModel.fromJson(jsonData);
-              print(user.toString());
-            }
-          }
-        },
-        child: const Icon(Icons.add),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ElevatedButton(
+              onPressed: () {
+                context.push('/login');
+              },
+              child: const Text('Login'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                context.push('/user');
+              },
+              child: const Text('User'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class LoginScreen extends StatelessWidget {
+  const LoginScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Login Screen'),
+      ),
+      body: const Center(
+        child: Text('Login Screen'),
+      ),
+    );
+  }
+}
+
+class UserScreen extends StatelessWidget {
+  const UserScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('User Screen'),
+      ),
+      body: const Center(
+        child: Text('User Screen'),
       ),
     );
   }
