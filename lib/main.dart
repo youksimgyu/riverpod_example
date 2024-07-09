@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-
-import 'go_router/go_router_builder/basic_builder.dart';
+import 'package:riverpod_example/shell_router/basic_shell_router.dart';
 
 void main() async {
   runApp(
@@ -15,13 +14,25 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
-      routerConfig: GoRouter(routes: $appRoutes),
+      routerConfig: basicShellRouter,
     );
   }
 }
 
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({
+    super.key,
+    this.child,
+  });
+
+  final Widget? child;
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  int currentIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +40,8 @@ class HomeScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Home Screen'),
       ),
-      body: Center(
+      body: widget.child
+      /*Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -49,6 +61,32 @@ class HomeScreen extends StatelessWidget {
             ),
           ],
         ),
+      )*/
+      ,
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: currentIndex,
+        onTap: (value) {
+          if (value == 0) {
+            context.push('/login');
+            // GoRouter.of(context).push('/login');
+          } else {
+            context.push('/user');
+            // GoRouter.of(context).push('/user');
+          }
+          setState(() {
+            currentIndex = value;
+          });
+        },
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Login',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'User',
+          ),
+        ],
       ),
     );
   }
@@ -59,11 +97,8 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Login Screen'),
-      ),
-      body: const Center(
+    return const Scaffold(
+      body: Center(
         child: Text('Login Screen'),
       ),
     );
@@ -81,9 +116,6 @@ class UserScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('User Screen'),
-      ),
       body: Center(
         child: Text('User Screen $userId'),
       ),
