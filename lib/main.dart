@@ -1,38 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import 'go_router/go_router_builder/basic_builder.dart';
+
 void main() async {
   runApp(
-    MainApp(),
+    const MainApp(),
   );
 }
 
 class MainApp extends StatelessWidget {
-  MainApp({super.key});
-
-  final _router = GoRouter(
-    routes: [
-      GoRoute(
-        path: '/',
-        builder: (context, state) => const HomeScreen(),
-        routes: [
-          GoRoute(
-            path: 'user',
-            builder: (context, state) => const UserScreen(),
-          ),
-        ],
-      ),
-      GoRoute(
-        path: '/login',
-        builder: (context, state) => const LoginScreen(),
-      ),
-    ],
-  );
+  const MainApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
-      routerConfig: _router,
+      routerConfig: GoRouter(routes: $appRoutes),
     );
   }
 }
@@ -52,13 +35,15 @@ class HomeScreen extends StatelessWidget {
           children: [
             ElevatedButton(
               onPressed: () {
-                context.push('/login');
+                // context.push('/login');
+                LoginRoute('').push(context);
               },
               child: const Text('Login'),
             ),
             ElevatedButton(
               onPressed: () {
-                context.push('/user');
+                // context.push('user');
+                UserRoute('100').push(context);
               },
               child: const Text('User'),
             ),
@@ -86,7 +71,12 @@ class LoginScreen extends StatelessWidget {
 }
 
 class UserScreen extends StatelessWidget {
-  const UserScreen({super.key});
+  const UserScreen({
+    super.key,
+    required this.userId,
+  });
+
+  final String userId;
 
   @override
   Widget build(BuildContext context) {
@@ -94,8 +84,8 @@ class UserScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('User Screen'),
       ),
-      body: const Center(
-        child: Text('User Screen'),
+      body: Center(
+        child: Text('User Screen $userId'),
       ),
     );
   }
