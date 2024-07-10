@@ -29,7 +29,8 @@ class LoginRoute extends GoRouteData {
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return const LoginScreen();
+    return const Placeholder();
+    // return const LoginScreen();
   }
 }
 
@@ -40,6 +41,7 @@ class UserRoute extends GoRouteData {
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return UserScreen(userId: state.pathParameters['userId']!);
+    return const Placeholder();
+    // return UserScreen(userId: state.pathParameters['userId']!);
   }
 }

@@ -7,15 +7,15 @@ final routerBasic = GoRouter(
       path: '/',
       builder: (context, state) => const HomeScreen(),
       routes: [
-        GoRoute(
-          path: 'user',
-          builder: (context, state) => const UserScreen(userId: '1'),
-        ),
+        // GoRoute(
+        //   path: 'user',
+        //   builder: (context, state) => const UserScreen(userId: '1'),
+        // ),
       ],
     ),
-    GoRoute(
-      path: '/login',
-      builder: (context, state) => const LoginScreen(),
-    ),
+    // GoRoute(
+    //   path: '/login',
+    //   builder: (context, state) => const LoginScreen(),
+    // ),
   ],
 );

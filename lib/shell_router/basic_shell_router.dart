@@ -12,11 +12,11 @@ final basicShellRouter = GoRouter(
     ShellRoute(
       navigatorKey: _shellNavKey,
       routes: [
-        GoRoute(
-            path: '/login', builder: (context, state) => const LoginScreen()),
-        GoRoute(
-            path: '/user',
-            builder: (context, state) => const UserScreen(userId: '1')),
+        // GoRoute(
+        //     path: '/login', builder: (context, state) => const LoginScreen()),
+        // GoRoute(
+        //     path: '/user',
+        //     builder: (context, state) => const UserScreen(userId: '1')),
       ],
       builder: (context, state, child) {
         return const HomeScreen(/*child: child*/);
