@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
-import 'package:riverpod_example/main.dart';
 
 part 'basic_builder.g.dart';
 
@@ -15,7 +14,8 @@ class HomeRoute extends GoRouteData {
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return const HomeScreen();
+    return const Placeholder();
+    // return const HomeScreen();
   }
 }
 
