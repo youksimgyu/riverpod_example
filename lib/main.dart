@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:riverpod_example/rest_api/http_widget.dart';
+import 'package:riverpod_example/rest_api/dio_widget.dart';
 
 const api = 'https://jsonplaceholder.typicode.com/posts';
 
@@ -15,7 +15,7 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-      home: HttpWidget(),
+      home: DioWidget(),
     );
   }
 }
