@@ -19,7 +19,7 @@ final basicShellRouter = GoRouter(
             builder: (context, state) => const UserScreen(userId: '1')),
       ],
       builder: (context, state, child) {
-        return HomeScreen(child: child);
+        return const HomeScreen(/*child: child*/);
       },
     ),
   ],
