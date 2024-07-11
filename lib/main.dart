@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:riverpod_example/rest_api/retrofit_widget.dart';
+import 'package:riverpod_example/features/mvvm_example/view/post_view2.dart';
 
 const api = 'https://jsonplaceholder.typicode.com/posts';
 
@@ -18,7 +18,7 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-      home: RetrofitWidget(),
+      home: PostView2(),
     );
   }
 }
